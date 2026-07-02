@@ -1,0 +1,27 @@
+[
+  {
+    "device_id": 1001,
+    "event_type": "FINGER_AUTH_SUCCESS",
+    "timestamp": 1782986284.662581,
+    "raw": {
+      "user_id": "U-2001",
+      "score": 87
+    }
+  },
+  {
+    "device_id": 1001,
+    "event_type": "DOOR_OPEN",
+    "timestamp": 1782986284.6626072,
+    "raw": {
+      "trigger": "auth_success"
+    }
+  },
+  {
+    "device_id": 1001,
+    "event_type": "DOOR_CLOSE",
+    "timestamp": 1782986284.662608,
+    "raw": {
+      "trigger": "timeout"
+    }
+  }
+]

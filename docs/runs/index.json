@@ -1,0 +1,24 @@
+[
+  {
+    "id": "20260702-191027",
+    "startedAt": 1782987025708,
+    "project": "Suprema GSDK 연동 테스트",
+    "mode": "Mock (real_hw 마커 테스트 미포함)",
+    "total": 5,
+    "passed": 4,
+    "failed": 1,
+    "skipped": 0,
+    "passRate": 80
+  },
+  {
+    "id": "20260702-191024",
+    "startedAt": 1782987022898,
+    "project": "Suprema GSDK 연동 테스트",
+    "mode": "Mock (real_hw 마커 테스트 미포함)",
+    "total": 5,
+    "passed": 4,
+    "failed": 1,
+    "skipped": 0,
+    "passRate": 80
+  }
+]

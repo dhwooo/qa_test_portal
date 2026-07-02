@@ -1,0 +1,6 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","57","test_demo_intentional_failure","tests","2026-07-02","failed","2026-07-02","","test_connect_demo","",""
+"","57","test_connect_list_disconnect","tests","2026-07-02","passed","2026-07-02","","test_connect_demo","",""
+"","55","test_connect_unreachable_device_fails","tests","2026-07-02","passed","2026-07-02","","test_connect_demo","",""
+"","56","test_finger_auth_event_captured","tests","2026-07-02","passed","2026-07-02","","test_event_monitor_demo","",""
+"","55","test_connect_new_device_registers","tests","2026-07-02","passed","2026-07-02","","test_connect_demo","",""

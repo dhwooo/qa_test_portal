@@ -1,0 +1,1 @@
+{"total":2,"items":[{"uid":"df425cd5b92d9c85deb143a1252c8ff8","name":"GSDK Connect","statistic":{"failed":1,"broken":0,"skipped":0,"passed":3,"unknown":0,"total":4}},{"uid":"9054a966cb82d346304c79453a6e550c","name":"EventMonitor","statistic":{"failed":0,"broken":0,"skipped":0,"passed":1,"unknown":0,"total":1}}]}

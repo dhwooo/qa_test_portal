@@ -1,0 +1,1 @@
+[{"values":["Suprema GSDK 연동 테스트"],"name":"Project"},{"values":["pytest + allure-pytest"],"name":"Test.Framework"},{"values":["Mock (real_hw 마커 테스트 미포함)"],"name":"Execution.Mode"},{"values":["Suprema G-SDK (gRPC)"],"name":"Target.SDK"},{"values":["Jira Cloud / Xray 연동 (test_key 태깅)"],"name":"Traceability"}]

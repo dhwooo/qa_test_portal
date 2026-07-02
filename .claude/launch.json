@@ -2,16 +2,10 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "allure-report",
+      "name": "docs",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["--yes", "serve", "--cors", "-l", "4567", "/Users/dhwoo/Desktop/2026_projects/supremas/allure-report"],
+      "runtimeArgs": ["--yes", "serve", "-l", "4567", "/Users/dhwoo/Desktop/2026_projects/supremas/docs"],
       "port": 4567
-    },
-    {
-      "name": "dashboard",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["--yes", "serve", "-l", "4568", "/Users/dhwoo/Desktop/2026_projects/supremas/dashboard"],
-      "port": 4568
     }
   ]
 }
