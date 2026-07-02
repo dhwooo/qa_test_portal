@@ -122,6 +122,8 @@ async function renderRunDashboard(root, runId, opts = {}){
         </div>
       </div>
 
+      ${trendTileHtml(runs, runId)}
+
       <div class="panel" id="testPanel">
         <div class="panel-head">
           <h2>테스트 실행 결과</h2>
@@ -139,6 +141,7 @@ async function renderRunDashboard(root, runId, opts = {}){
     animateNumber(document.getElementById('numSkipped'), skipped);
 
     bindTestPanel(tests, msgByUid, base);
+    bindTrendTile(root, runs);
     root.querySelector('#toRunsList')?.addEventListener('click', () => {
       document.querySelectorAll('.nav-item').forEach(el => el.classList.toggle('active', el.dataset.view === 'runs'));
       renderRunsList(root, 1);
