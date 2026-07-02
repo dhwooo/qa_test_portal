@@ -122,7 +122,10 @@ async function renderRunDashboard(root, runId, opts = {}){
         </div>
       </div>
 
-      ${trendTileHtml(runs, runId)}
+      <div class="grid-2">
+        ${trendTileHtml(runs, runId)}
+        ${suiteSummaryTileHtml(tests)}
+      </div>
 
       <div class="panel" id="testPanel">
         <div class="panel-head">
@@ -142,6 +145,12 @@ async function renderRunDashboard(root, runId, opts = {}){
 
     bindTestPanel(tests, msgByUid, base);
     bindTrendTile(root, runs);
+    bindSuiteRows(root, (cat) => {
+      testFilters = { search: '', status: 'all', category: cat };
+      testPage = 1;
+      refreshTestPanel(tests, msgByUid, base);
+      document.getElementById('testPanel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
     root.querySelector('#toRunsList')?.addEventListener('click', () => {
       document.querySelectorAll('.nav-item').forEach(el => el.classList.toggle('active', el.dataset.view === 'runs'));
       renderRunsList(root, 1);
@@ -214,6 +223,45 @@ async function renderRunsList(root, page = 1){
   }
 }
 
+async function renderSuites(root){
+  document.getElementById('backBtn').style.display = 'none';
+  document.getElementById('topbarRight').style.display = 'none';
+  root.innerHTML = `<div class="boot">불러오는 중…</div>`;
+  try {
+    const runs = await getRunsIndex();
+    if (!runs.length) return renderSoon(root, '아직 실행 기록이 없습니다', './scripts/deploy_pages.sh 를 실행하면 스위트가 채워집니다.');
+    const latestId = runs[0].id;
+    if (!dataCache[latestId]) dataCache[latestId] = await loadReportData(`./runs/history/${latestId}`);
+    const { tests } = dataCache[latestId];
+    const cats = groupBySuite(tests);
+
+    root.innerHTML = `
+      <div class="suites-grid">
+        ${cats.map((c, i) => {
+          const rate = c.total ? Math.round(c.passed / c.total * 100) : 0;
+          return `
+          <div class="card suite-tile" data-cat="${esc(c.name)}" style="animation-delay:${0.04 + i*0.04}s">
+            <div class="sname">${esc(c.name)}</div>
+            <div class="smeta">테스트 ${c.total}개 · 실패 ${c.failed}개${c.skipped ? ` · 스킵 ${c.skipped}개` : ''}</div>
+            <div class="srate" style="color:${c.failed > 0 ? 'var(--error)' : 'var(--tertiary)'}">${rate}%</div>
+            ${suiteMiniBar(c)}
+          </div>`;
+        }).join('')}
+      </div>`;
+
+    bindSuiteRows(root, (cat) => {
+      testFilters = { search: '', status: 'all', category: cat };
+      filtersOwnerRunId = latestId;
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.toggle('active', el.dataset.view === 'dashboard'));
+      renderRunDashboard(root, latestId, { isDefault: true }).then(() => {
+        document.getElementById('testPanel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  } catch (err) {
+    root.innerHTML = `<div class="error-box">⨯ 스위트 현황을 불러오지 못했습니다 (${err.message}).</div>`;
+  }
+}
+
 function renderSoon(root, title, desc){
   document.getElementById('backBtn').style.display = 'none';
   document.getElementById('topbarRight').style.display = 'none';
@@ -226,10 +274,10 @@ function renderSoon(root, title, desc){
 
 const VIEWS = {
   dashboard: { title: '대시보드', meta: 'Suprema G-SDK 연동 테스트 · 실행 결과 요약', render: renderDefaultDashboard },
-  runs: { title: '테스트 실행', meta: '실행 기록 전체 보기', render: (r) => renderRunsList(r, 1) },
+  suites: { title: '테스트 스위트', meta: '스위트(카테고리)별 테스트 현황 · 최신 실행 기준', render: renderSuites },
+  runs: { title: '실행 기록', meta: '전체 실행 이력', render: (r) => renderRunsList(r, 1) },
   flaky: { title: 'Flaky 관리', meta: 'ReportPortal 연동 예정', render: (r) => renderSoon(r, 'ReportPortal 연동 예정', '실행 이력이 쌓이면 반복 실패/불안정 테스트를 자동으로 잡아내는 화면이 여기 생깁니다.') },
   cases: { title: '테스트 케이스', meta: 'Jira · Zephyr Scale / Xray', render: (r) => renderSoon(r, 'Jira에서 관리 중', '테스트 케이스 자체는 Jira Cloud(Zephyr Scale / Xray)에서 관리됩니다. 여기서는 연결 상태와 커버리지만 요약해서 보여줄 예정입니다.') },
-  settings: { title: '설정', meta: '데이터 소스 · 연동 관리', render: (r) => renderSoon(r, '설정', 'Allure / ReportPortal / Jira 연동 정보를 관리하는 화면이 이후 추가됩니다.') },
 };
 
 function switchView(key){

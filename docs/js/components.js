@@ -122,13 +122,14 @@ function openNewRunModal(){
 
 /* ---------------- 실행 추이 타일 (ReportPortal launch-history 스타일 스택 바) ---------------- */
 function trendTileHtml(runs, currentId){
-  if (runs.length < 2) return '';
-  const items = runs.slice(0, 20).slice().reverse();
+  const items = runs.slice(0, 14).slice().reverse();
   const max = Math.max(...items.map(r => r.total || 1));
   const bars = items.map(r => {
     const total = r.total || 1;
     const h = Math.max(20, (total / max) * 100);
     const pf = (r.passed / total) * 100, ff = (r.failed / total) * 100, sf = (r.skipped / total) * 100;
+    const m = r.id.match(/^\d{4}(\d{2})(\d{2})-(\d{2})(\d{2})/);
+    const short = m ? `${m[1]}.${m[2]}` : '';
     return `
       <div class="trend-col" data-run="${r.id}" title="${formatRunDate(r.id)} · ${r.passRate}% (${r.passed}/${total})">
         <div class="trend-bar ${r.id === currentId ? 'cur' : ''}" style="height:${h}%">
@@ -137,16 +138,101 @@ function trendTileHtml(runs, currentId){
           <span class="sp" style="height:${pf}%"></span>
         </div>
         <span class="trend-rate ${r.failed > 0 ? 'bad' : ''}">${r.passRate}</span>
+        <span class="trend-date">${short}</span>
       </div>`;
   }).join('');
   return `
-    <div class="card trend-card" style="animation-delay:.16s">
+    <div class="card trend-card" style="animation-delay:.14s">
       <div class="trend-head">
         <span class="lbl">실행 추이</span>
-        <span class="sub">최근 ${items.length}회 · 막대를 누르면 해당 실행으로 이동</span>
+        <span class="sub">최근 ${items.length}회</span>
       </div>
       <div class="trend-bars">${bars}</div>
     </div>`;
+}
+
+/* ---------------- 스위트 집계 + 현황 타일 ---------------- */
+function groupBySuite(tests){
+  const cats = {};
+  tests.forEach(t => {
+    const c = cats[t.category] ??= { name: t.category, total: 0, passed: 0, failed: 0, skipped: 0 };
+    c.total++;
+    if (t.status === 'passed') c.passed++;
+    else if (t.status === 'skipped') c.skipped++;
+    else c.failed++;
+  });
+  return Object.values(cats).sort((a, b) => b.failed - a.failed || b.total - a.total);
+}
+
+function suiteMiniBar(c){
+  const t = c.total || 1;
+  return `<span class="suite-mini">
+    <span class="sp" style="width:${c.passed/t*100}%"></span>
+    <span class="sf" style="width:${c.failed/t*100}%"></span>
+    <span class="ss" style="width:${c.skipped/t*100}%"></span>
+  </span>`;
+}
+
+function suiteSummaryTileHtml(tests){
+  const cats = groupBySuite(tests);
+  const rows = cats.map(c => `
+    <div class="suite-row" data-cat="${esc(c.name)}">
+      <span class="sname">${esc(c.name)}</span>
+      ${suiteMiniBar(c)}
+      <span class="scount">${c.passed}/${c.total}</span>
+    </div>`).join('');
+  return `
+    <div class="card suite-card" style="animation-delay:.18s">
+      <div class="trend-head">
+        <span class="lbl">스위트별 현황</span>
+        <span class="sub">${cats.length}개 스위트</span>
+      </div>
+      ${rows}
+    </div>`;
+}
+
+function bindSuiteRows(root, onOpen){
+  root.querySelectorAll('[data-cat]').forEach(el => {
+    el.addEventListener('click', () => onOpen(el.dataset.cat));
+  });
+}
+
+/* ---------------- 설정 모달 ---------------- */
+function openSettingsModal(){
+  const close = openModal(`
+    <div class="modal-head">
+      <h3>설정</h3>
+      <button class="modal-close" id="modalClose">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <div class="form-label" style="margin-bottom:4px;">연동 상태</div>
+    <div class="integration-row">
+      <span class="integration-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M8 9h8M8 13h5"/></svg></span>
+      <div class="txt"><div class="t1">Allure JSON</div><div class="t2">실행 스냅샷 · runs/history</div></div>
+      <span class="integration-state on">연결됨</span>
+    </div>
+    <div class="integration-row">
+      <span class="integration-ic"><svg viewBox="0 0 24 24" fill="none"><path d="M11.53 3 3 11.4a1.2 1.2 0 0 0 0 1.7l2.9 2.85 5.63-5.6 5.63 5.6 2.9-2.85a1.2 1.2 0 0 0 0-1.7L11.53 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span>
+      <div class="txt"><div class="t1">Jira Cloud</div><div class="t2">이슈 링크 · Xray test_key 태깅</div></div>
+      <span class="integration-state off">도메인 대기</span>
+    </div>
+    <div class="integration-row">
+      <span class="integration-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span>
+      <div class="txt"><div class="t1">ReportPortal</div><div class="t2">실행 이력 · Flaky 분석</div></div>
+      <span class="integration-state off">예정</span>
+    </div>
+    <div class="integration-row">
+      <span class="integration-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l6-3.5-6-3.5Z"/></svg></span>
+      <div class="txt"><div class="t1">GitLab CI</div><div class="t2">테스트 실행 트리거</div></div>
+      <span class="integration-state off">예정</span>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" id="modalOk">확인</button>
+    </div>
+  `);
+  document.getElementById('modalClose').addEventListener('click', close);
+  document.getElementById('modalOk').addEventListener('click', close);
 }
 
 function bindTrendTile(root, runs){
