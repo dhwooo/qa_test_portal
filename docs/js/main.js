@@ -4,6 +4,7 @@ document.querySelectorAll('.nav-item').forEach(el => {
 document.getElementById('backBtn').addEventListener('click', () => {
   renderRunDashboard(document.getElementById('content'), currentRunId, { page: testPage, isDefault: lastIsDefault });
 });
+document.getElementById('settingsBtn').addEventListener('click', () => switchView('settings'));
 document.getElementById('refreshBtn').addEventListener('click', (e) => {
   runsIndexCache = null;
   if (currentRunId) delete dataCache[currentRunId];

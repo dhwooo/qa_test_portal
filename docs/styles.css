@@ -86,19 +86,18 @@ button{font-family:inherit; border:none; background:none; cursor:pointer; color:
   background:var(--surface-container-high); padding:3px 7px; border-radius:9999px; letter-spacing:.02em;}
 .nav-item.active .nav-soon{background:rgba(0,82,204,0.1); color:var(--primary);}
 
-/* ---------------- user card ---------------- */
-.user-card{margin-top:auto; padding:10px; border-radius:16px; background:var(--surface);
-  border:1px solid var(--surface-container-high); display:flex; align-items:center; gap:10px;
-  transition: border-color .18s ease;}
-.user-card:hover{border-color:var(--outline);}
-.avatar{width:34px; height:34px; border-radius:var(--radius-s); background:var(--secondary-container); color:var(--primary);
+/* ---------------- sidebar footer (데이터 소스 상태) ---------------- */
+.sidebar-footer{margin-top:auto; padding:12px; border-radius:16px; background:var(--surface);
+  border:1px solid var(--surface-container-high); position:relative;}
+.sidebar-footer .row{display:flex; align-items:center; gap:10px;}
+.sidebar-footer .dot-wrap{width:32px; height:32px; border-radius:var(--radius-s); background:var(--tertiary-container);
+  display:flex; align-items:center; justify-content:center; flex:none;}
+.sidebar-footer .dot{width:7px; height:7px; border-radius:50%; background:var(--tertiary); box-shadow:0 0 0 3px rgba(0,201,167,0.22);}
+.sidebar-footer .txt .t1{font-size:12.5px; font-weight:700;}
+.sidebar-footer .txt .t2{font-size:10.5px; font-weight:600; color:var(--gray-500); margin-top:1px;}
+
+.avatar{width:32px; height:32px; border-radius:var(--radius-s); background:var(--secondary-container); color:var(--primary);
   display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; flex:none;}
-.user-card .txt{min-width:0; flex:1;}
-.user-card .name{font-size:12.5px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.user-card .role{font-size:10.5px; font-weight:600; color:var(--gray-500); margin-top:1px;}
-.logout-btn{color:var(--gray-400); flex:none; padding:6px; border-radius:8px; display:flex;
-  transition: color .15s ease, background .15s ease;}
-.logout-btn:hover{color:var(--error); background:var(--error-container);}
 
 /* ---------------- main ---------------- */
 .main{flex:1; min-width:0; position:relative;}
@@ -108,15 +107,19 @@ button{font-family:inherit; border:none; background:none; cursor:pointer; color:
   pointer-events:none; z-index:0;
 }
 
-/* topbar — 떠 있는 크롬이므로 유리 */
+/* topbar — 떠 있는 리퀴드 글래스 바 (콘텐츠와 분리된 독립 패널) */
 .topbar{
-  display:flex; align-items:center; justify-content:space-between;
-  padding:20px 36px; background:var(--glass-bg);
-  backdrop-filter:blur(14px) saturate(1.4); -webkit-backdrop-filter:blur(14px) saturate(1.4);
-  border-bottom:1px solid rgba(25,31,40,0.045);
-  position:sticky; top:0; z-index:5;
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  margin:14px 24px 0; padding:12px 18px;
+  background:rgba(255,255,255,0.62);
+  backdrop-filter:blur(22px) saturate(1.7); -webkit-backdrop-filter:blur(22px) saturate(1.7);
+  border:1px solid rgba(255,255,255,0.75);
+  box-shadow: 0 1px 1px rgba(25,31,40,0.03), 0 10px 30px -12px rgba(25,31,40,0.12),
+              inset 0 1px 0 rgba(255,255,255,0.9);
+  border-radius:18px;
+  position:sticky; top:14px; z-index:5;
 }
-.topbar-left{display:flex; align-items:center; gap:12px;}
+.topbar-left{display:flex; align-items:center; gap:12px; min-width:0;}
 .back-btn{
   width:34px; height:34px; border-radius:var(--radius-s); background:var(--surface-container); border:1px solid var(--outline);
   display:flex; align-items:center; justify-content:center; flex:none; color:var(--on-surface-variant);
@@ -124,23 +127,34 @@ button{font-family:inherit; border:none; background:none; cursor:pointer; color:
 }
 .back-btn:hover{background:var(--surface-container-high); transform:translateX(-2px);}
 .back-btn svg{width:16px; height:16px;}
-.topbar h1{font-size:21px; font-weight:800; margin:0; letter-spacing:-0.02em;}
-.topbar .meta{font-size:12.5px; color:var(--gray-500); margin-top:3px; font-weight:500; display:flex; align-items:center; gap:6px;}
+.topbar h1{font-size:18px; font-weight:800; margin:0; letter-spacing:-0.02em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.topbar .meta{font-size:12px; color:var(--gray-500); margin-top:2px; font-weight:500; display:flex; align-items:center; gap:6px;
+  white-space:nowrap; overflow:hidden;}
 .topbar .meta .sep{color:var(--gray-300);}
-.topbar-right{display:flex; align-items:center; gap:10px;}
+.topbar-right{display:flex; align-items:center; gap:8px; flex:none;}
+.topbar-context{display:flex; align-items:center; gap:8px;}
+.topbar-div{width:1px; height:24px; background:rgba(25,31,40,0.08); margin:0 4px;}
 .mode-badge{
   display:inline-flex; align-items:center; gap:7px; font-size:12px; font-weight:700; color:var(--primary);
   background:var(--secondary-container); padding:7px 13px 7px 11px; border-radius:9999px;
 }
 .mode-badge .d{width:6px; height:6px; border-radius:50%; background:var(--secondary); box-shadow:0 0 0 3px rgba(49,130,246,0.2);}
-.refresh-btn{
+.icon-btn{
   width:34px; height:34px; border-radius:var(--radius-s); background:var(--surface-container); border:1px solid var(--outline);
-  display:flex; align-items:center; justify-content:center; color:var(--gray-500);
+  display:flex; align-items:center; justify-content:center; color:var(--gray-500); flex:none;
   transition: background .15s ease, color .15s ease, transform .4s var(--ease);
 }
-.refresh-btn svg{width:15px; height:15px;}
-.refresh-btn:hover{background:var(--surface-container-high); color:var(--on-surface);}
-.refresh-btn.spin svg{transform:rotate(360deg);}
+.icon-btn svg{width:15px; height:15px;}
+.icon-btn:hover{background:var(--surface-container-high); color:var(--on-surface);}
+.icon-btn.danger:hover{background:var(--error-container); color:var(--error); border-color:rgba(240,68,82,0.25);}
+.icon-btn.spin svg{transform:rotate(360deg);}
+
+.user-chip{display:flex; align-items:center; gap:9px; padding:4px 10px 4px 4px; border-radius:9999px;
+  background:var(--surface-container); border:1px solid var(--outline);}
+.user-chip .avatar{border-radius:9999px; width:28px; height:28px; font-size:12px;}
+.user-chip .txt{min-width:0;}
+.user-chip .name{font-size:12px; font-weight:700; line-height:1.2; white-space:nowrap;}
+.user-chip .role{font-size:10px; font-weight:600; color:var(--gray-500); line-height:1.2; white-space:nowrap;}
 
 .content{padding:24px 36px 60px; position:relative; z-index:1;}
 
