@@ -1,0 +1,14 @@
+/*
+ * Allure는 CSS custom property 기반 디자인 토큰을 쓴다 (--color-intent-primary-bg 등).
+ * 시그니처 보라색(violet)을 이 값들만 덮어써서 Jira 블루 톤으로 바꾼다.
+ * !important를 쓰는 이유: Allure 내부 규칙이 :root[data-theme=...] 같은 속성 선택자를
+ * 써서 특이도가 더 높은 경우가 있어, 로드 순서만으로는 항상 이기지 못한다.
+ */
+:root, [data-theme="light"], [data-theme="dark"], html {
+  --color-intent-primary-bg: #0052CC !important;
+  --color-intent-primary-text: #0052CC !important;
+  --color-link-text: #0052CC !important;
+  --color-link-text-hover: #0065FF !important;
+  --color-link-text-active: #0747A6 !important;
+  --font-family: "Segoe UI", "Noto Sans KR", -apple-system, ui-sans-serif, system-ui, sans-serif !important;
+}

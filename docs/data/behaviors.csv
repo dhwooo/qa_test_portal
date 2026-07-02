@@ -1,0 +1,6 @@
+"BROKEN","EPIC","FAILED","FEATURE","PASSED","SKIPPED","STORY","UNKNOWN"
+"0","","1","GSDK Connect","0","0","데모용 의도적 실패 케이스 (리포트에서 FAIL이 어떻게 보이는지 확인용)","0"
+"0","","0","EventMonitor","1","0","디바이스 인증 이벤트 캡처 (PLACEHOLDER 인터페이스)","0"
+"0","","0","GSDK Connect","1","0","목록에 없는 신규 디바이스 자동 등록","0"
+"0","","0","GSDK Connect","1","0","디바이스 연결 / 조회 / 해제","0"
+"0","","0","GSDK Connect","1","0","도달 불가능한 디바이스 연결 실패","0"

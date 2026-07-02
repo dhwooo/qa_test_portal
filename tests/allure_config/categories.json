@@ -1,0 +1,16 @@
+[
+  {
+    "name": "GSDK 연결 실패",
+    "matchedStatuses": ["failed", "broken"],
+    "messageRegex": ".*(RpcError|UNAVAILABLE|cannot reach device).*"
+  },
+  {
+    "name": "검증 실패 (Assertion)",
+    "matchedStatuses": ["failed"],
+    "traceRegex": ".*AssertionError.*"
+  },
+  {
+    "name": "테스트 코드/환경 오류",
+    "matchedStatuses": ["broken"]
+  }
+]
